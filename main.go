@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/avored/go-ecommerce/app/providers"
+	"github.com/avored/go-ecommerce/cmd"
 	"github.com/joho/godotenv"
 )
 
@@ -14,7 +15,7 @@ func main() {
 
 	setupDatabase()
 
-	
+	cmd.Execute()
 
     router := providers.RegisterRouter()
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
