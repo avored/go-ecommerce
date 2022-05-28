@@ -6,6 +6,7 @@
 *.dylib
 tmp
 node_modules
+.env
 
 # Test binary, built with `go test -c`
 *.test
