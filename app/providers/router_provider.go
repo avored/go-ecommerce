@@ -1,9 +1,9 @@
 package providers
 
 import (
-	"fmt"
 	"net/http"
 
+	"github.com/avored/go-ecommerce/app/controllers"
 	"github.com/gorilla/mux"
 )
 var (
@@ -18,12 +18,7 @@ func RegisterRouter() *mux.Router {
 	// registerAppRouter(r)
 
 	router.StrictSlash(true)
-	router.HandleFunc("/", HelloServer).Methods(http.MethodGet)	
+	router.HandleFunc("/", controllers.HelloServer).Methods(http.MethodGet)	
 
 	return router
-}
-
-
-func HelloServer(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "Hello World URL: /%s", r.URL.Path[1:])
 }
