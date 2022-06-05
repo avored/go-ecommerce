@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"html/template"
 	"net/http"
 
 	"github.com/avored/go-ecommerce/providers"
@@ -13,20 +12,7 @@ type DashboardViewModel struct {
 }
 
 func AdminDashboardHandler(w http.ResponseWriter, r *http.Request) {
-	// session, _ := providers.GetSessionStore(r)
-
 	dashboardViewModel := DashboardViewModel{}
 
-	files := []string{
-		"templates/admin/dashboard.html",
-		"templates/layouts/admin.html",
-	}
-
-	templates := template.Must(template.ParseFiles(files...))
-
-	err := templates.Execute(w, dashboardViewModel)
-
-	if err != nil {
-		http.Error(w, "Internal Template Parsing Error", 500)
-	}
+	providers.RenderAdminView("templates/admin/dashboard.html", dashboardViewModel, w)
 }

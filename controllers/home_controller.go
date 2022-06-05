@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"html/template"
 	"net/http"
 	"time"
 
@@ -19,12 +18,6 @@ type HomeViewModel struct {
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	homeViewModel := HomeViewModel{Name: "Anonymous", Time: time.Now().Format(time.Stamp)}
 
-	files := []string{
-		"templates/home.html",
-		"templates/layouts/app.html",
-	}
-	templates := template.Must(template.ParseFiles(files...))
-
 	if name := r.FormValue("name"); name != "" {
 		homeViewModel.Name = name
 	}
@@ -32,11 +25,6 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	homeViewModel.IsAuth = func() bool {
 		return true
 	}
-	err := templates.Execute(w, homeViewModel)
-
-	if err != nil {
-		// log.Println(err.Error())
-		http.Error(w, "Internal Server Error", 500)
-	}
+	providers.RenderView("templates/home.html", homeViewModel, w)
 
 }
