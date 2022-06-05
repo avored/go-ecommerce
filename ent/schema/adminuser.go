@@ -24,3 +24,11 @@ func (AdminUser) Fields() []ent.Field {
 func (AdminUser) Edges() []ent.Edge {
 	return nil
 }
+
+
+
+func (AdminUser) Mixin() []ent.Mixin {
+    return []ent.Mixin{
+        TimeMixin{},
+    }
+}

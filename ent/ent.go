@@ -8,7 +8,15 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
+	"github.com/avored/go-ecommerce/ent/address"
 	"github.com/avored/go-ecommerce/ent/adminuser"
+	"github.com/avored/go-ecommerce/ent/cart"
+	"github.com/avored/go-ecommerce/ent/cartitem"
+	"github.com/avored/go-ecommerce/ent/category"
+	"github.com/avored/go-ecommerce/ent/customer"
+	"github.com/avored/go-ecommerce/ent/order"
+	"github.com/avored/go-ecommerce/ent/orderproduct"
+	"github.com/avored/go-ecommerce/ent/product"
 )
 
 // ent aliases to avoid import conflicts in user's code.
@@ -29,7 +37,15 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		adminuser.Table: adminuser.ValidColumn,
+		address.Table:      address.ValidColumn,
+		adminuser.Table:    adminuser.ValidColumn,
+		cart.Table:         cart.ValidColumn,
+		cartitem.Table:     cartitem.ValidColumn,
+		category.Table:     category.ValidColumn,
+		customer.Table:     customer.ValidColumn,
+		order.Table:        order.ValidColumn,
+		orderproduct.Table: orderproduct.ValidColumn,
+		product.Table:      product.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

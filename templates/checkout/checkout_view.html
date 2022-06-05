@@ -1,0 +1,367 @@
+{{template "base" .}}
+
+{{define "title"}}
+Checkout Page
+{{ end }}
+
+{{define "page_title"}}
+<div class="flex">
+    <h1 class="text-3xl font-bold text-gray-900">
+        Checkout Page
+    </h1>
+</div>
+{{ end }}
+
+{{define "main"}}
+
+<div class="w-full">
+    <div class="mt-10 sm:mt-0">
+        <form method="post" action="/placeorder">
+            <div class="md:grid md:grid-cols-12 md:gap-6">
+                <div class="md:col-span-7">
+                    <div class="p-4 rounded">
+                        <div class="pb-5">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">
+                                Customer Information
+                            </h3>
+                            {{ if not .Customer }}
+                            <div class="block">
+                                <div class="mt-5 grid grid-cols-12 gap-6 text-sm text-gray-600">
+                                    <div class="col-span-6 ">
+                                        <label for="first_name" class="block text-sm font-medium text-gray-700">
+                                            First Name
+                                        </label>
+                                        <input type="text" autofocus value="" name="first_name" id="first_name" autocomplete="first_name"
+                                            class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+                            
+                                    <div class="col-span-6">
+                                        <label for="last_name" class="block text-sm font-medium text-gray-700">
+                                            Last Name
+                                        </label>
+                                        <input type="text" value="" name="last_name" id="last_name" autocomplete="last_name"
+                                            class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+                                </div>
+                                <div class="mt-5 text-sm text-gray-600">
+                                    <label for="email" class="block text-sm font-medium text-gray-700">
+                                        Email address
+                                    </label>
+                                    <input type="text" value="" name="email" id="email" autocomplete="email"
+                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                </div>
+                                <div class="mt-5 grid grid-cols-12 gap-6 text-sm text-gray-600">
+                                    <div class="col-span-6 ">
+                                        <label for="password" class="block text-sm font-medium text-gray-700">
+                                            Password
+                                        </label>
+                                        <input type="password" value="" name="password" id="password" autocomplete="password"
+                                            class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+                            
+                                    <div class="col-span-6">
+                                        <label for="confirm_password" class="block text-sm font-medium text-gray-700">
+                                            Confirm Password
+                                        </label>
+                                        <input type="password" value="" name="confirm_password" id="confirm_password"
+                                            autocomplete="confirm_password"
+                                            class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    </div>
+                                </div>
+                            </div>
+                            {{ else }}
+                            <div class="mt-5 gap-6 text-sm text-gray-600">
+                                <div class="w-full rounded shadow border">
+                                    <div class="flex pr-5 border-b items-center">
+                                        <h6 class="text-lg p-3  text-red-500">
+                                            {{ .Customer.FirstName }} {{ .Customer.LastName }}
+                                        </h6>
+                                        <div class="ml-auto">
+                                            <input id="remember-me" checked name="remember-me" type="checkbox"
+                                                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                        </div>
+    
+                                    </div>
+                                    
+                                    <div class="p-3">
+                                        {{ .Customer.Email }}
+                                        <input type="hidden" name="customer[customer_id]" value="{{ .Customer.ID }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            {{ end }}
+                        </div>
+                        <div class="pt-5 pb-5 border-t">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">
+                                Address Information
+                            </h3>
+                            {{ if not .DefaultShippingAddress }}
+                            <div class="block">
+                                <div class="mt-5 gap-6 text-sm text-gray-600">
+                                    <div class="w-full rounded shadow border">
+                                        <div class="flex pr-5 border-b items-center">
+                                            <h6 class="text-lg p-3  text-red-500">
+                                                Shipping Address
+                                            </h6>
+                                            <div class="ml-auto">
+                                                <label>Use this address as Billing</label>
+                                                <input id="remember-me" checked name="remember-me" type="checkbox"
+                                                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                            </div>
+                                        </div>
+                                        <div class="p-3">
+                                            <div class="grid grid-cols-6 gap-6">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="first_name" class="block text-sm font-medium text-gray-700">
+                                                        First Name
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[first_name]" id="first_name" autocomplete="first_name"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="last_name" class="block text-sm font-medium text-gray-700">
+                                                        Last Name
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[last_name]" id="last_name" autocomplete="last_name"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            </div>
+                                            <div class="mt-5">
+                                                <label for="company_name" class="block text-sm font-medium text-gray-700">
+                                                    Company Name
+                                                </label>
+                                                <input type="text" value="" name="shipping[company_name]" id="company_name" autocomplete="company_name"
+                                                    class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                            <div class="mt-5">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="country_id" class="block text-sm font-medium text-gray-700">
+                                                        Country
+                                                    </label>
+                                                    <select name="shipping[country_id]" class="rounded w-full">
+                                                        <option value="">Please select</option>
+                                                        <option value="120">New Zealand</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="postcode" class="block text-sm font-medium text-gray-700">
+                                                        PostCode
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[postcode]" id="postcode" autocomplete="postcode"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            </div>
+                                            <div class="mt-5 grid grid-cols-6 gap-6">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="address1" class="block text-sm font-medium text-gray-700">
+                                                        Address1
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[address1]" id="address1" autocomplete="address1"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="address2" class="block text-sm font-medium text-gray-700">
+                                                        Address2
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[address2]" id="address2" autocomplete="address2"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            </div>
+                                            <div class="mt-5 grid grid-cols-6 gap-6">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="suburb" class="block text-sm font-medium text-gray-700">
+                                                        Suburb
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[suburb]" id="suburb" autocomplete="suburb"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="city" class="block text-sm font-medium text-gray-700">
+                                                        City
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[city]" id="city" autocomplete="city"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            </div>
+                                            <div class="mt-5 grid grid-cols-6 gap-6">
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="state" class="block text-sm font-medium text-gray-700">
+                                                        State
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[state]" id="state" autocomplete="state"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            
+                                                <div class="col-span-6 sm:col-span-3">
+                                                    <label for="phone" class="block text-sm font-medium text-gray-700">
+                                                        Phone
+                                                    </label>
+                                                    <input type="text" value="" name="shipping[phone]" id="phone" autocomplete="phone"
+                                                        class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{ else }}
+                                <div class="mt-5 gap-6 text-sm text-gray-600">
+                                    <div class="w-full rounded shadow border">
+                                        <div class="flex pr-5 border-b items-center">
+                                            <h6 class="text-lg p-3  text-red-500">
+                                                Default Shipping Address
+                                            </h6>
+                                            <div class="ml-auto">
+                                                <input id="remember-me" checked name="remember-me" type="checkbox"
+                                                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                            </div>
+                                
+                                        </div>
+                                
+                                        <div class="p-3">
+                                            {{ .DefaultShippingAddress.FirstName }} {{ .DefaultShippingAddress.LastName }} <br>
+
+                                            {{ .DefaultShippingAddress.CompanyName }} <br>
+                                            {{ .DefaultShippingAddress.Address1 }}, {{ .DefaultShippingAddress.Address2 }} <br>
+                                            {{ .DefaultShippingAddress.Suburb }} <br>
+                                            {{ .DefaultShippingAddress.City }} <br>
+                                            {{ .DefaultShippingAddress.State }} <br>
+                                            {{ .DefaultShippingAddress.CountryID }} {{ .DefaultShippingAddress.Postcode }}  <br>
+                                            {{ .DefaultShippingAddress.Phone }} <br>
+                                            <input type="hidden" name="shipping[address_id]" value="{{ .DefaultShippingAddress.ID }}" />
+                                            <input type="hidden" name="billing[address_id]" value="{{ .DefaultBillingAddress.ID }}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            {{ end }}
+                        </div>
+                        <div class="pt-5 pb-5 border-t">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">
+                                Shipping Information
+                            </h3>
+                            <div class="block">
+                                <div class="mt-5 gap-6 text-sm text-gray-600">
+                                    <div class="w-full rounded shadow border">
+                                        <div class="flex pr-5 border-b items-center">
+                                            <h6 class="text-lg p-3  text-red-500">
+                                                Free Shipping via Courier NZ
+                                            </h6>
+                                            <div class="ml-auto">
+                                                <input id="remember-me" checked name="remember-me" type="checkbox"
+                                                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                            </div>
+                                
+                                        </div>
+                                
+                                        <div class="p-3">
+                                            Shipping Cost : $0.00
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-5 pb-5 border-t">
+                            <h3 class="text-lg font-medium leading-6 text-gray-900">
+                                Payment Information
+                            </h3>
+                            <div class="block">
+                                <div class="mt-5 gap-6 text-sm text-gray-600">
+                                    <div class="w-full rounded shadow border">
+                                        <div class="flex pr-5 border-b items-center">
+                                            <h6 class="text-lg p-3  text-red-500">
+                                                Cash on Delivery
+                                            </h6>
+                                            <div class="ml-auto">
+                                                <input id="remember-me" checked name="remember-me" type="checkbox"
+                                                    class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+                <div class="mt-5 rounded p-4 md:mt-0 h-96 md:col-span-5">
+                    <div class="text-center font-bold text-xl w-full">
+                        Order Summary
+                    </div>
+                    <div class="bg-gray-100 mt-5 rounded border shadow">
+                        <div class="px-3 border">
+                            <div class="block border-b pb-5">
+                                <div class="p-3 text-red-500 font-semibold">
+                                    Cart Items
+                                </div>
+                                <div class="p-3">
+                                    <div class="grid grid-cols-12 gap-6">
+                                        <img src="https://via.placeholder.com/150" class="col-span-2 w-16 rounded" alt="placeholder" />
+                                        <div class="block text-sm ml-3 col-span-5">
+                                            <h4 class="font-semibold">Product Name</h4>
+                                            <div class="text-red-500">$10.10</div>
+                                            <div class="text-gray-500">Black</div>
+                                        </div>
+                                        <div class="block text-sm ml-3 col-span-2">
+                                            <h4 class="font-semibold">QTY</h4>
+                                            <div class="text-red-500">5</div>
+                                        </div>
+                                        <div class="block text-sm ml-3 col-span-3">
+                                            <h4 class="font-semibold">Line Item</h4>
+                                            <div class="text-red-500">$50.50</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="block border-b pb-5">
+                                <div class="pt-3 text-red-500 px-3 font-semibold">
+                                    Shipping Address
+                                </div>
+                                <div class="px-3 pt-2 text-sm">
+                                    <p>Purvesh Patel (03 615 9020)</p>
+                                    <p>20B Cleland crescent BlockHouseBay</p>
+                                    <p>Auckland, 0600</p>
+                                    <p>New Zealand</p>
+                                </div>
+                            </div>
+                            <div class="block border-b pb-5">
+                                <div class="pt-3 text-red-500 px-3 font-semibold">
+                                    Billing Address
+                                </div>
+                                <div class="px-3 pt-2 text-sm">
+                                    <p>Same as shipping</p>
+                                </div>
+                            </div>
+                            <div class="block border-b pb-5">
+                                <div class="pt-3 text-red-500 px-3 font-semibold">
+                                    Shipping
+                                </div>
+                                <div class="px-3 pt-2 text-sm">
+                                    <p>Free shipping via NZ Courier</p>
+                                </div>
+                            </div>
+                            <div class="block border-b pb-5">
+                                <div class="pt-3 text-red-500 px-3 font-semibold">
+                                    Payment
+                                </div>
+                                <div class="px-3 pt-2 text-sm">
+                                    <p>Cash on Delivery</p>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                    <div class="mt-5">
+                        <button type="submit"
+                            class="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{{ end }}

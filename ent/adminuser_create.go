@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -17,6 +18,34 @@ type AdminUserCreate struct {
 	config
 	mutation *AdminUserMutation
 	hooks    []Hook
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (auc *AdminUserCreate) SetCreatedAt(t time.Time) *AdminUserCreate {
+	auc.mutation.SetCreatedAt(t)
+	return auc
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (auc *AdminUserCreate) SetNillableCreatedAt(t *time.Time) *AdminUserCreate {
+	if t != nil {
+		auc.SetCreatedAt(*t)
+	}
+	return auc
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (auc *AdminUserCreate) SetUpdatedAt(t time.Time) *AdminUserCreate {
+	auc.mutation.SetUpdatedAt(t)
+	return auc
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (auc *AdminUserCreate) SetNillableUpdatedAt(t *time.Time) *AdminUserCreate {
+	if t != nil {
+		auc.SetUpdatedAt(*t)
+	}
+	return auc
 }
 
 // SetFirstName sets the "first_name" field.
@@ -54,6 +83,7 @@ func (auc *AdminUserCreate) Save(ctx context.Context) (*AdminUser, error) {
 		err  error
 		node *AdminUser
 	)
+	auc.defaults()
 	if len(auc.hooks) == 0 {
 		if err = auc.check(); err != nil {
 			return nil, err
@@ -111,8 +141,26 @@ func (auc *AdminUserCreate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (auc *AdminUserCreate) defaults() {
+	if _, ok := auc.mutation.CreatedAt(); !ok {
+		v := adminuser.DefaultCreatedAt()
+		auc.mutation.SetCreatedAt(v)
+	}
+	if _, ok := auc.mutation.UpdatedAt(); !ok {
+		v := adminuser.DefaultUpdatedAt()
+		auc.mutation.SetUpdatedAt(v)
+	}
+}
+
 // check runs all checks and user-defined validators on the builder.
 func (auc *AdminUserCreate) check() error {
+	if _, ok := auc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "AdminUser.created_at"`)}
+	}
+	if _, ok := auc.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "AdminUser.updated_at"`)}
+	}
 	if _, ok := auc.mutation.FirstName(); !ok {
 		return &ValidationError{Name: "first_name", err: errors.New(`ent: missing required field "AdminUser.first_name"`)}
 	}
@@ -152,6 +200,22 @@ func (auc *AdminUserCreate) createSpec() (*AdminUser, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
+	if value, ok := auc.mutation.CreatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: adminuser.FieldCreatedAt,
+		})
+		_node.CreatedAt = value
+	}
+	if value, ok := auc.mutation.UpdatedAt(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: adminuser.FieldUpdatedAt,
+		})
+		_node.UpdatedAt = value
+	}
 	if value, ok := auc.mutation.FirstName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -201,6 +265,7 @@ func (aucb *AdminUserCreateBulk) Save(ctx context.Context) ([]*AdminUser, error)
 	for i := range aucb.builders {
 		func(i int, root context.Context) {
 			builder := aucb.builders[i]
+			builder.defaults()
 			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
 				mutation, ok := m.(*AdminUserMutation)
 				if !ok {

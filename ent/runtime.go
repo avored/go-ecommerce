@@ -2,8 +2,130 @@
 
 package ent
 
+import (
+	"time"
+
+	"github.com/avored/go-ecommerce/ent/address"
+	"github.com/avored/go-ecommerce/ent/adminuser"
+	"github.com/avored/go-ecommerce/ent/cart"
+	"github.com/avored/go-ecommerce/ent/customer"
+	"github.com/avored/go-ecommerce/ent/order"
+	"github.com/avored/go-ecommerce/ent/orderproduct"
+	"github.com/avored/go-ecommerce/ent/product"
+	"github.com/avored/go-ecommerce/ent/schema"
+)
+
 // The init function reads all schema descriptors with runtime code
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	addressMixin := schema.Address{}.Mixin()
+	addressMixinFields0 := addressMixin[0].Fields()
+	_ = addressMixinFields0
+	addressFields := schema.Address{}.Fields()
+	_ = addressFields
+	// addressDescCreatedAt is the schema descriptor for created_at field.
+	addressDescCreatedAt := addressMixinFields0[0].Descriptor()
+	// address.DefaultCreatedAt holds the default value on creation for the created_at field.
+	address.DefaultCreatedAt = addressDescCreatedAt.Default.(func() time.Time)
+	// addressDescUpdatedAt is the schema descriptor for updated_at field.
+	addressDescUpdatedAt := addressMixinFields0[1].Descriptor()
+	// address.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	address.DefaultUpdatedAt = addressDescUpdatedAt.Default.(func() time.Time)
+	// address.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	address.UpdateDefaultUpdatedAt = addressDescUpdatedAt.UpdateDefault.(func() time.Time)
+	// addressDescIsDefault is the schema descriptor for is_default field.
+	addressDescIsDefault := addressFields[1].Descriptor()
+	// address.DefaultIsDefault holds the default value on creation for the is_default field.
+	address.DefaultIsDefault = addressDescIsDefault.Default.(bool)
+	adminuserMixin := schema.AdminUser{}.Mixin()
+	adminuserMixinFields0 := adminuserMixin[0].Fields()
+	_ = adminuserMixinFields0
+	adminuserFields := schema.AdminUser{}.Fields()
+	_ = adminuserFields
+	// adminuserDescCreatedAt is the schema descriptor for created_at field.
+	adminuserDescCreatedAt := adminuserMixinFields0[0].Descriptor()
+	// adminuser.DefaultCreatedAt holds the default value on creation for the created_at field.
+	adminuser.DefaultCreatedAt = adminuserDescCreatedAt.Default.(func() time.Time)
+	// adminuserDescUpdatedAt is the schema descriptor for updated_at field.
+	adminuserDescUpdatedAt := adminuserMixinFields0[1].Descriptor()
+	// adminuser.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	adminuser.DefaultUpdatedAt = adminuserDescUpdatedAt.Default.(func() time.Time)
+	// adminuser.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	adminuser.UpdateDefaultUpdatedAt = adminuserDescUpdatedAt.UpdateDefault.(func() time.Time)
+	cartMixin := schema.Cart{}.Mixin()
+	cartMixinFields0 := cartMixin[0].Fields()
+	_ = cartMixinFields0
+	cartFields := schema.Cart{}.Fields()
+	_ = cartFields
+	// cartDescCreatedAt is the schema descriptor for created_at field.
+	cartDescCreatedAt := cartMixinFields0[0].Descriptor()
+	// cart.DefaultCreatedAt holds the default value on creation for the created_at field.
+	cart.DefaultCreatedAt = cartDescCreatedAt.Default.(func() time.Time)
+	// cartDescUpdatedAt is the schema descriptor for updated_at field.
+	cartDescUpdatedAt := cartMixinFields0[1].Descriptor()
+	// cart.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	cart.DefaultUpdatedAt = cartDescUpdatedAt.Default.(func() time.Time)
+	// cart.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	cart.UpdateDefaultUpdatedAt = cartDescUpdatedAt.UpdateDefault.(func() time.Time)
+	customerMixin := schema.Customer{}.Mixin()
+	customerMixinFields0 := customerMixin[0].Fields()
+	_ = customerMixinFields0
+	customerFields := schema.Customer{}.Fields()
+	_ = customerFields
+	// customerDescCreatedAt is the schema descriptor for created_at field.
+	customerDescCreatedAt := customerMixinFields0[0].Descriptor()
+	// customer.DefaultCreatedAt holds the default value on creation for the created_at field.
+	customer.DefaultCreatedAt = customerDescCreatedAt.Default.(func() time.Time)
+	// customerDescUpdatedAt is the schema descriptor for updated_at field.
+	customerDescUpdatedAt := customerMixinFields0[1].Descriptor()
+	// customer.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	customer.DefaultUpdatedAt = customerDescUpdatedAt.Default.(func() time.Time)
+	// customer.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	customer.UpdateDefaultUpdatedAt = customerDescUpdatedAt.UpdateDefault.(func() time.Time)
+	orderMixin := schema.Order{}.Mixin()
+	orderMixinFields0 := orderMixin[0].Fields()
+	_ = orderMixinFields0
+	orderFields := schema.Order{}.Fields()
+	_ = orderFields
+	// orderDescCreatedAt is the schema descriptor for created_at field.
+	orderDescCreatedAt := orderMixinFields0[0].Descriptor()
+	// order.DefaultCreatedAt holds the default value on creation for the created_at field.
+	order.DefaultCreatedAt = orderDescCreatedAt.Default.(func() time.Time)
+	// orderDescUpdatedAt is the schema descriptor for updated_at field.
+	orderDescUpdatedAt := orderMixinFields0[1].Descriptor()
+	// order.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	order.DefaultUpdatedAt = orderDescUpdatedAt.Default.(func() time.Time)
+	// order.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	order.UpdateDefaultUpdatedAt = orderDescUpdatedAt.UpdateDefault.(func() time.Time)
+	orderproductMixin := schema.OrderProduct{}.Mixin()
+	orderproductMixinFields0 := orderproductMixin[0].Fields()
+	_ = orderproductMixinFields0
+	orderproductFields := schema.OrderProduct{}.Fields()
+	_ = orderproductFields
+	// orderproductDescCreatedAt is the schema descriptor for created_at field.
+	orderproductDescCreatedAt := orderproductMixinFields0[0].Descriptor()
+	// orderproduct.DefaultCreatedAt holds the default value on creation for the created_at field.
+	orderproduct.DefaultCreatedAt = orderproductDescCreatedAt.Default.(func() time.Time)
+	// orderproductDescUpdatedAt is the schema descriptor for updated_at field.
+	orderproductDescUpdatedAt := orderproductMixinFields0[1].Descriptor()
+	// orderproduct.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	orderproduct.DefaultUpdatedAt = orderproductDescUpdatedAt.Default.(func() time.Time)
+	// orderproduct.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	orderproduct.UpdateDefaultUpdatedAt = orderproductDescUpdatedAt.UpdateDefault.(func() time.Time)
+	productMixin := schema.Product{}.Mixin()
+	productMixinFields0 := productMixin[0].Fields()
+	_ = productMixinFields0
+	productFields := schema.Product{}.Fields()
+	_ = productFields
+	// productDescCreatedAt is the schema descriptor for created_at field.
+	productDescCreatedAt := productMixinFields0[0].Descriptor()
+	// product.DefaultCreatedAt holds the default value on creation for the created_at field.
+	product.DefaultCreatedAt = productDescCreatedAt.Default.(func() time.Time)
+	// productDescUpdatedAt is the schema descriptor for updated_at field.
+	productDescUpdatedAt := productMixinFields0[1].Descriptor()
+	// product.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	product.DefaultUpdatedAt = productDescUpdatedAt.Default.(func() time.Time)
+	// product.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	product.UpdateDefaultUpdatedAt = productDescUpdatedAt.UpdateDefault.(func() time.Time)
 }

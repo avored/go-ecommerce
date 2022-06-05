@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/avored/go-ecommerce/ent/adminuser"
@@ -15,6 +16,10 @@ type AdminUser struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// FirstName holds the value of the "first_name" field.
 	FirstName string `json:"first_name,omitempty"`
 	// LastName holds the value of the "last_name" field.
@@ -34,6 +39,8 @@ func (*AdminUser) scanValues(columns []string) ([]interface{}, error) {
 			values[i] = new(sql.NullInt64)
 		case adminuser.FieldFirstName, adminuser.FieldLastName, adminuser.FieldEmail, adminuser.FieldPassword:
 			values[i] = new(sql.NullString)
+		case adminuser.FieldCreatedAt, adminuser.FieldUpdatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type AdminUser", columns[i])
 		}
@@ -55,6 +62,18 @@ func (au *AdminUser) assignValues(columns []string, values []interface{}) error 
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			au.ID = int(value.Int64)
+		case adminuser.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				au.CreatedAt = value.Time
+			}
+		case adminuser.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				au.UpdatedAt = value.Time
+			}
 		case adminuser.FieldFirstName:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field first_name", values[i])
@@ -107,6 +126,10 @@ func (au *AdminUser) String() string {
 	var builder strings.Builder
 	builder.WriteString("AdminUser(")
 	builder.WriteString(fmt.Sprintf("id=%v", au.ID))
+	builder.WriteString(", created_at=")
+	builder.WriteString(au.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", updated_at=")
+	builder.WriteString(au.UpdatedAt.Format(time.ANSIC))
 	builder.WriteString(", first_name=")
 	builder.WriteString(au.FirstName)
 	builder.WriteString(", last_name=")

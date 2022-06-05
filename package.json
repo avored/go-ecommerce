@@ -1,22 +1,24 @@
 {
-    "name": "avored-go-ecommerce",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
-    "scripts": {
-        "dev": "npx mix",
-        "watch": "npx mix watch",
-        "tailwind": "npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css",
-        "tailwind-watch": "npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "@tailwindcss/aspect-ratio": "^0.4.0",
-        "@tailwindcss/forms": "^0.5.0",
-        "alpinejs": "^3.9.5",
-        "feather-icons": "^4.29.0",
-        "laravel-mix": "^6.0.43",
-        "tailwindcss": "^3.0.7"
-    }
+  "name": "avored-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "npx mix",
+    "watch": "npx mix watch",
+    "tailwind": "npx tailwindcss -i ./static/stylesheets/tailwind.css -o ./static/stylesheets/app.css",
+    "tailwind-watch": "npx tailwindcss -i ./static/stylesheets/tailwind.css -o ./static/stylesheets/app.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.0",
+    "laravel-mix": "^6.0.43",
+    "tailwindcss": "^3.0.7"
+  },
+  "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "alpinejs": "^3.9.5"
+  }
 }

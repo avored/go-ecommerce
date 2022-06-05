@@ -1,0 +1,113 @@
+{{template "base" .}}
+
+{{define "title"}}
+My Account Page
+{{ end }}
+
+{{define "page_title"}}
+<div class="flex">
+    <h1 class="text-3xl font-bold text-gray-900">
+        My Account Page
+    </h1>
+</div>
+{{ end }}
+
+{{define "main"}}
+
+<div class="w-full">
+    <div class="mt-10 sm:mt-0">
+        <div class="md:grid md:grid-cols-12 md:gap-6">
+            <div class="md:col-span-3">
+                <div class="px-4 sm:px-0 text-center">
+                    <div class="block mt-5">
+                        <div class="w-full">
+                            <ul class="bg-white rounded-lg border border-gray-200 text-gray-900">
+                                <li class="p-5  border-b border-gray-200 w-full rounded-t-lg">
+                                    <img src="https://via.placeholder.com/250" class="w-full" alt="place holder" />
+                                </li>
+                                <li class="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                                    <a href="/my-account/edit" class="hover:text-red-400">
+                                        Edit Profile
+                                    </a>
+                                </li>
+                                <li class="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                                    <a href="#" class="hover:text-red-400">
+                                        My Addresses
+                                    </a>
+                                </li>
+                                <li class="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                                    <a href="#" class="hover:text-red-400">
+                                        My Orders
+                                    </a>
+                                </li>
+                                <li class="px-6 py-2 border-b border-gray-200 w-full rounded-t-lg">
+                                    <a href="#" class="hover:text-red-400">
+                                        Logout
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-5 md:mt-0 md:col-span-9">
+                <div class="block p-6 w-full">
+                    <div class="block rounded shadow bg-white">
+                        <div class="flex w-full items-center border-b border-x  px-5">
+                            <h5 class="text-gray-900 p-4 text-xl leading-tight font-medium mb-2">
+                                Edit Customer Information
+                                
+                            </h5>
+                        </div>
+                        <div class="p-4">
+                            <div class="sm:rounded-md">
+                                <form method="post" action="/my-account/edit">
+                                    <div class="px-4 py-5 bg-white sm:p-6">
+                                        <div class="grid grid-cols-6 gap-6">
+                                            <div class="col-span-6 text-gray-500 sm:col-span-3">
+                                                First Name
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <input type="text" autofocus value="{{ .Customer.FirstName }}" name="first_name" id="first_name" autocomplete="first_name"
+                                                    class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                        <div class="grid mt-3 grid-cols-6 gap-6">
+                                            <div class="col-span-6 text-gray-500 sm:col-span-3">
+                                                Last Name
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <input type="text" autofocus value="{{ .Customer.LastName }}" name="last_name" id="last_name" autocomplete="last_name"
+                                                    class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                        <div class="grid mt-3 grid-cols-6 gap-6">
+                                            <div class="col-span-6 text-gray-500 sm:col-span-3">
+                                                Email
+                                            </div>
+                                            <div class="col-span-6 sm:col-span-3">
+                                                <input type="text" autofocus value="{{ .Customer.Email }}" disabled name="email" id="email" autocomplete="email"
+                                                    class="mt-1 focus:ring-red-500 focus:border-red-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="px-4 py-3 bg-gray-50 text-right sm:px-6">
+                                        <button type="submit"
+                                            class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                            Save
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ end }}

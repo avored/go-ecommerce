@@ -1,0 +1,28 @@
+{{template "base" .}}
+
+{{define "title"}}
+Checkout Page
+{{ end }}
+
+{{define "page_title"}}
+<div class="flex">
+    <h1 class="text-3xl font-bold text-gray-900">
+        Checkout Page
+    </h1>
+</div>
+{{ end }}
+
+{{define "main"}}
+
+<div class="w-full">
+    <div class="mt-10 sm:mt-0">
+       <h1>Order Successfully Placed {{ .Order }}</h1>
+
+       <p>
+        {{ range .CartItems }}
+            <p>{{ . }}</p>
+        {{ end }}
+       </p>
+    </div>
+</div>
+{{ end }}

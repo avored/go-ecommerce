@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -24,6 +25,12 @@ type AdminUserUpdate struct {
 // Where appends a list predicates to the AdminUserUpdate builder.
 func (auu *AdminUserUpdate) Where(ps ...predicate.AdminUser) *AdminUserUpdate {
 	auu.mutation.Where(ps...)
+	return auu
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (auu *AdminUserUpdate) SetUpdatedAt(t time.Time) *AdminUserUpdate {
+	auu.mutation.SetUpdatedAt(t)
 	return auu
 }
 
@@ -62,6 +69,7 @@ func (auu *AdminUserUpdate) Save(ctx context.Context) (int, error) {
 		err      error
 		affected int
 	)
+	auu.defaults()
 	if len(auu.hooks) == 0 {
 		affected, err = auu.sqlSave(ctx)
 	} else {
@@ -110,6 +118,14 @@ func (auu *AdminUserUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (auu *AdminUserUpdate) defaults() {
+	if _, ok := auu.mutation.UpdatedAt(); !ok {
+		v := adminuser.UpdateDefaultUpdatedAt()
+		auu.mutation.SetUpdatedAt(v)
+	}
+}
+
 func (auu *AdminUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -127,6 +143,13 @@ func (auu *AdminUserUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := auu.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: adminuser.FieldUpdatedAt,
+		})
 	}
 	if value, ok := auu.mutation.FirstName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
@@ -175,6 +198,12 @@ type AdminUserUpdateOne struct {
 	mutation *AdminUserMutation
 }
 
+// SetUpdatedAt sets the "updated_at" field.
+func (auuo *AdminUserUpdateOne) SetUpdatedAt(t time.Time) *AdminUserUpdateOne {
+	auuo.mutation.SetUpdatedAt(t)
+	return auuo
+}
+
 // SetFirstName sets the "first_name" field.
 func (auuo *AdminUserUpdateOne) SetFirstName(s string) *AdminUserUpdateOne {
 	auuo.mutation.SetFirstName(s)
@@ -217,6 +246,7 @@ func (auuo *AdminUserUpdateOne) Save(ctx context.Context) (*AdminUser, error) {
 		err  error
 		node *AdminUser
 	)
+	auuo.defaults()
 	if len(auuo.hooks) == 0 {
 		node, err = auuo.sqlSave(ctx)
 	} else {
@@ -265,6 +295,14 @@ func (auuo *AdminUserUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// defaults sets the default values of the builder before save.
+func (auuo *AdminUserUpdateOne) defaults() {
+	if _, ok := auuo.mutation.UpdatedAt(); !ok {
+		v := adminuser.UpdateDefaultUpdatedAt()
+		auuo.mutation.SetUpdatedAt(v)
+	}
+}
+
 func (auuo *AdminUserUpdateOne) sqlSave(ctx context.Context) (_node *AdminUser, err error) {
 	_spec := &sqlgraph.UpdateSpec{
 		Node: &sqlgraph.NodeSpec{
@@ -299,6 +337,13 @@ func (auuo *AdminUserUpdateOne) sqlSave(ctx context.Context) (_node *AdminUser, 
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := auuo.mutation.UpdatedAt(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeTime,
+			Value:  value,
+			Column: adminuser.FieldUpdatedAt,
+		})
 	}
 	if value, ok := auuo.mutation.FirstName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
