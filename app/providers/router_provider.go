@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/avored/go-ecommerce/app/controllers"
+	admin "github.com/avored/go-ecommerce/app/controllers/admin"
 	"github.com/gorilla/mux"
 )
 var (
@@ -18,7 +19,11 @@ func RegisterRouter() *mux.Router {
 	// registerAppRouter(r)
 
 	router.StrictSlash(true)
-	router.HandleFunc("/", controllers.HelloServer).Methods(http.MethodGet)	
+	router.HandleFunc("/", controllers.HelloServer).Methods(http.MethodGet)
+
+
+	
+	router.HandleFunc("/admin/login", admin.AdminAuth).Methods(http.MethodGet)	
 
 	return router
 }

@@ -6,9 +6,13 @@ import (
 	"time"
 
 	"github.com/avored/go-ecommerce/app/providers"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
+
+	setupDatabase()
 
     router := providers.RegisterRouter()
 	router.PathPrefix("/public/").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./public/"))))
@@ -23,4 +27,18 @@ func main() {
 
 	log.Println("Server started on port " + port)
 	log.Fatal(srv.ListenAndServe())
+}
+
+
+func setupDatabase(){
+	//initiate Ent Client
+	client, err := providers.SetupDatabaseClient()
+	if err != nil {
+		log.Printf("err : %s", err)
+	}
+	defer client.Close()
+
+	if err != nil {
+		log.Println("Fail to initialize client")
+	}
 }

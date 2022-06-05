@@ -7,15 +7,16 @@
         "dev": "npx mix",
         "watch": "npx mix watch",
         "tailwind": "npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css",
-        "tailwind-watch": "npx tailwindcss -i ./resources/css/app.css -o ./static/css/app.css --watch"
+        "tailwind-watch": "npx tailwindcss -i ./resources/css/app.css -o ./public/css/app.css --watch"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@tailwindcss/forms": "^0.5.0",
-        "laravel-mix": "^6.0.43",
-        "tailwindcss": "^3.0.7",
         "@tailwindcss/aspect-ratio": "^0.4.0",
-        "alpinejs": "^3.9.5"
+        "@tailwindcss/forms": "^0.5.0",
+        "alpinejs": "^3.9.5",
+        "feather-icons": "^4.29.0",
+        "laravel-mix": "^6.0.43",
+        "tailwindcss": "^3.0.7"
     }
 }

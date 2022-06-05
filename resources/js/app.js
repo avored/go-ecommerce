@@ -1,5 +1,7 @@
 import Alpine from 'alpinejs'
+import feather from 'feather-icons'
 
+window.feather = feather
 window.Alpine = Alpine
 
 const dropdown = () => ({
@@ -21,3 +23,4 @@ const mainMenu = () => ({
 Alpine.data('mainMenu', mainMenu)
 
 Alpine.start()
+feather.replace()
