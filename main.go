@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/avored/go-ecommerce/app/providers"
+	"github.com/avored/go-ecommerce/providers"
 	"github.com/joho/godotenv"
 )
 

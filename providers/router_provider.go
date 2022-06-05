@@ -3,8 +3,7 @@ package providers
 import (
 	"net/http"
 
-	"github.com/avored/go-ecommerce/app/controllers"
-	admin "github.com/avored/go-ecommerce/app/controllers/admin"
+	"github.com/avored/go-ecommerce/controllers"
 	"github.com/gorilla/mux"
 )
 var (
@@ -23,7 +22,7 @@ func RegisterRouter() *mux.Router {
 
 
 	
-	router.HandleFunc("/admin/login", admin.AdminAuth).Methods(http.MethodGet)	
+	router.HandleFunc("/admin/login", controllers.AdminAuth).Methods(http.MethodGet)	
 
 	return router
 }
