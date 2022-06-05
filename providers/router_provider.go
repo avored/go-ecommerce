@@ -10,19 +10,39 @@ var (
 	router *mux.Router
 )
 
-// register all available route
+
 func RegisterRouter() *mux.Router {
 	router := mux.NewRouter()
 
-	// registerAdminUserRouter(r)
-	// registerAppRouter(r)
-
 	router.StrictSlash(true)
-	router.HandleFunc("/", controllers.HelloServer).Methods(http.MethodGet)
-
-
-	
-	router.HandleFunc("/admin/login", controllers.AdminAuth).Methods(http.MethodGet)	
+	registerAppRouter(router)
+	registerAdminRouter(router)
 
 	return router
+}
+
+
+/**
+ * -----------------                               -----------------
+ * -----------------                               -----------------
+ * -----------------      Register app router    -----------------
+ * -----------------                               -----------------
+ * -----------------                               -----------------
+ */
+func registerAppRouter(router *mux.Router) {
+	router.HandleFunc("/", controllers.HelloServer).Methods(http.MethodGet)
+}
+
+
+
+
+/**
+ * -----------------                               -----------------
+ * -----------------                               -----------------
+ * -----------------     Register ADMIN  router    -----------------
+ * -----------------                               -----------------
+ * -----------------                               -----------------
+ */
+func registerAdminRouter(router *mux.Router) {
+		router.HandleFunc("/admin/login", controllers.AdminAuth).Methods(http.MethodGet)
 }
