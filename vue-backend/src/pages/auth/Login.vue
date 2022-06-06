@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from "vue"
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n({
+    inheritLocale: true,
+    useScope: 'global'
+})
 
 interface User {
     email?: string;
@@ -19,7 +24,7 @@ const loginFormSubmit = () => {
             <div>
                 <img  class="mx-auto h-12 w-auto" src="../../assets/logo.svg" alt="AvoRed E commerce" />
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                    Sign in to your account
+                    {{ t('sign_into_avored_account') }}
                 </h2>
             </div>
             <form class="mt-8 space-y-6" @submit.prevent="loginFormSubmit">
@@ -27,21 +32,21 @@ const loginFormSubmit = () => {
                 <div class="rounded-md shadow-sm">
                     <div class="mt-5">
                         <label for="email-address" class="block text-gray-500">
-                            Email address
+                            {{ t('email_address') }}
                         </label>
                         <input id="email-address" type="email" 
                             autocomplete="email" 
                             v-model="user.email"
-                            required class="block w-full rounded text-sm text-gray-800" placeholder="Email address" />
+                            required class="block w-full rounded text-sm text-gray-800" :placeholder="t('email_address')" />
                     </div>
                     <div class="mt-5">
                         <label for="password" class="block text-gray-500">
-                            Password
+                            {{ t('password') }}
                         </label>
                         <input id="password" type="password"  required
                             v-model="user.password" 
                             class="block w-full rounded text-sm text-gray-800" 
-                            placeholder="Password" />
+                            :placeholder="t('password')" />
                     </div>
                 </div>
 
@@ -61,15 +66,12 @@ const loginFormSubmit = () => {
                         "
                         />
                         <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                            Remember me
+                            {{ t('remember_me') }}
                         </label>
                     </div>
                     <div class="text-sm">
-                        <a
-                        href="#"
-                        class="font-medium text-red-600 hover:text-red-500"
-                        >
-                        Forgot your password?
+                        <a href="#" class="font-medium text-red-600 hover:text-red-500">
+                            {{ t('forgot_password') }}
                         </a>
                     </div>
                 </div>
@@ -114,7 +116,7 @@ const loginFormSubmit = () => {
                             />
                         </svg>
                         </span>
-                        Sign in
+                            {{  t('sign_in') }}
                     </button>
                 </div>
             </form>
