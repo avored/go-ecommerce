@@ -8,6 +8,7 @@ const count = ref(0)
 
 <template>  
   <div class="flex h-screen w-full justify-center items-center">
-      <h1 class="text-2xl text-red-600">{{ msg }}</h1>
+      <h1 class="text-2xl text-red-600">{{ msg }} Empty Message</h1>
+      <router-link :to="{name: 'admin.login'}" >Login</router-link>
   </div>
 </template>

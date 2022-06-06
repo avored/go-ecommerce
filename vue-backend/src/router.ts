@@ -3,10 +3,9 @@ import { RouteRecordRaw } from "vue-router"
 
 const routes: Array<RouteRecordRaw> = [
     {
-        path: "/",
-        alias: "/tutorials",
-        name: "tutorials",
-        component: () => import("./components/HelloWorld.vue"),
+        path: "/admin/login",
+        name: "admin.login",
+        component: () => import("./pages/auth/Login.vue"),
     },
     {
         path: "/tutorials/:id",
@@ -14,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import("./components/HelloWorld.vue"),
     },
     {
-        path: "/add",
+        path: "/",
         name: "add",
         component: () => import("./components/HelloWorld.vue"),
     },
