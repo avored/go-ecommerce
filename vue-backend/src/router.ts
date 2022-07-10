@@ -5,7 +5,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: "/admin/login",
         name: "admin.login",
-        component: () => import("./pages/auth/Login.vue"),
+        component: () => import("./pages/Login.vue"),
     },
     {
         path: "/tutorials/:id",
@@ -14,7 +14,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: "/",
-        name: "add",
+        name: "home",
         component: () => import("./components/HelloWorld.vue"),
     },
 ];

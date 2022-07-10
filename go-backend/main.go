@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/avored/go-ecommerce/controllers"
+	"github.com/avored/go-ecommerce/middlewares"
 	"github.com/avored/go-ecommerce/providers"
 
 	"github.com/gin-gonic/gin"
@@ -23,6 +24,7 @@ func main() {
 	}
 	defer client.Close()
 	server := gin.New()
+	server.Use(middlewares.CORSMiddleware())
 	server.SetTrustedProxies(nil)
 
 	providers.SetClient(client)

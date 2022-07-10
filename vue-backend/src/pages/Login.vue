@@ -1,6 +1,9 @@
 <script setup lang="ts">
+import axios from 'axios'
 import { ref } from "vue"
 import { useI18n } from 'vue-i18n'
+
+
 const { t } = useI18n({
     inheritLocale: true,
     useScope: 'global'
@@ -14,7 +17,14 @@ interface User {
 const user = ref<User>({});
 
 const loginFormSubmit = () => {
-    console.log(user.value.email);
+    console.log(user.value.email, user.value.password)
+    axios.post("http://localhost:8080/admin/login", {email: user.value.email, password: user.value.password})
+        .then(response => {
+            console.log(response)
+        })
+        .catch(error => {
+            console.error("There was an error!", error);
+        });
 };
 </script>
 
@@ -22,7 +32,7 @@ const loginFormSubmit = () => {
     <div class="h-screen min-h-full flex items-center justify-center py-12  px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full shadow p-8">
             <div>
-                <img  class="mx-auto h-12 w-auto" src="../../assets/logo.svg" alt="AvoRed E commerce" />
+                <img  class="mx-auto h-12 w-auto" src="../assets/logo.svg" alt="AvoRed E commerce" />
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     {{ t('sign_into_avored_account') }}
                 </h2>
