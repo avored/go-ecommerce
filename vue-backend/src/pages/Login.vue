@@ -3,7 +3,6 @@ import axios from 'axios'
 import { ref } from "vue"
 import { useI18n } from 'vue-i18n'
 
-
 const { t } = useI18n({
     inheritLocale: true,
     useScope: 'global'
@@ -17,9 +16,13 @@ interface User {
 const user = ref<User>({});
 
 const loginFormSubmit = () => {
-    console.log(user.value.email, user.value.password)
-    axios.post("http://localhost:8080/admin/login", {email: user.value.email, password: user.value.password})
-        .then(response => {
+    const endpointBaseUrl = import.meta.env.VITE_APP_BACKEND_BASE_URL
+
+    axios({
+        method: 'POST',
+        url: endpointBaseUrl + "/admin/login",
+        data: {email: user.value.email, password: user.value.password}
+    }).then(response => {
             console.log(response)
         })
         .catch(error => {

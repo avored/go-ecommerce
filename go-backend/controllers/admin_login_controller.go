@@ -1,19 +1,28 @@
 package controllers
 
 import (
+	"fmt"
 
 	"github.com/avored/go-ecommerce/services"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 )
 
+type LoginJSON struct {
+    Email     string `form:"email" binding:"required"`
+    Password string `form:"password" binding:"required"`
+}
+
+
 func AdminLoginHandler(ctx *gin.Context) {
-	email := ctx.PostForm("email")
+	request := LoginJSON{}
 
-	adminUserModel := services.FetchAdminUserByEmail(ctx, email)
+	ctx.Bind(&request) 
 
-	match := CheckPasswordHash(ctx.PostForm("password"), adminUserModel.Password)
-	var token  string = "INVALID_TOKEN"
+	adminUserModel := services.FetchAdminUserByEmail(ctx, request.Email)
+
+	match := CheckPasswordHash(request.Password, adminUserModel.Password)
+	var token string = "INVALID_TOKEN"
 	if match {
 		token = "my_demo_valid_token_add_middleware_jwt_token_via_gin_framework"
 	}
@@ -21,12 +30,10 @@ func AdminLoginHandler(ctx *gin.Context) {
 	ctx.JSON(200,
 		gin.H{
 			"admin_user": adminUserModel,
-			"token": token,
+			"token":      token,
 		},
 	)
 }
-
-
 
 func HashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)

@@ -17,14 +17,19 @@ func main() {
 
 	godotenv.Load()
 
-	providers.SetupServiceProvider()	
+	providers.SetupServiceProvider()
 	client, err := providers.NewEntClient()
 	if err != nil {
 		log.Printf("err : %s", err)
 	}
 	defer client.Close()
 	server := gin.New()
-	server.Use(middlewares.CORSMiddleware())
+	cors := middlewares.CORSMiddleware()
+
+	// config.AllowMethods = []string{"POST", "GET", "PUT", "DELETE"}
+	// config.AllowOrigins = []string{"http://localhost:3000"}
+
+	server.Use(cors)
 	server.SetTrustedProxies(nil)
 
 	providers.SetClient(client)
