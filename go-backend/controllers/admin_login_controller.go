@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/avored/go-ecommerce/services"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
