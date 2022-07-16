@@ -1,19 +1,30 @@
-import React, { useState } from 'react'
+import React from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { ThemeContextType, IsUserLoggedInStatus } from '../../@types/theme';
+import { ThemeContext } from '../../context/themeContext';
 
 function Login() {
   const navigate = useNavigate()
 
+  const { isUserLoggedInStatus, updateIsLoggedInUserStatus } = React.useContext(ThemeContext) as ThemeContextType;
+
+  const handleThemeChange = (userStauts: boolean) => {
+      console.log(userStauts)
+    updateIsLoggedInUserStatus(userStauts as IsUserLoggedInStatus);
+  };
+  
   function handleOnLoginSubmit (e) {
     e.preventDefault()
     const endpointBaseUrl = 'http://localhost:8080' //import.meta.env.VITE_APP_BACKEND_BASE_URL
+    console.log(isUserLoggedInStatus, updateIsLoggedInUserStatus)
 
     axios({
         method: 'POST',
         url: endpointBaseUrl + "/admin/login",
         data: {email: 'admin@admin.com', password: 'admin123'},
     }).then(response => {
+          
           navigate('/')
         })
         .catch(error => {
@@ -27,15 +38,14 @@ function Login() {
 
       {/* Content area */}
       <div className="flex items-center justify-center shadow-md max-w-md bg-white rounded w-full space-y-8 p-12">
-  
         <div className="mx-auto  w-full max-w-[550px]">
           <form action="#" onSubmit={handleOnLoginSubmit} method="POST">
-           
             <div className="mb-5">
               <label
                 htmlFor="email"
                 className="mb-3 block text-base font-medium  text-[#07074D]"
               >
+                {isUserLoggedInStatus ? 'logged in' : 'false'}
                 Email Address
               </label>
               <input

@@ -7,12 +7,12 @@ import {
 import './css/style.scss';
 
 import './charts/ChartjsConfig';
-
+import ThemeProvider from './context/themeContext'
 // Import pages
-import Dashboard from './pages/Dashboard';
-import Login from './pages/auth/Login';
+import Dashboard from './pages/Dashboard'
+import Login from './pages/auth/Login'
 
-function App() {
+export default function App() {
 
   // const location = useLocation();
 
@@ -23,13 +23,11 @@ function App() {
   // }, [location.pathname]); // triggered on route change
 
   return (
-    <>
-      <Routes>
-        <Route exact path="/admin/login" element={<Login />} />
-        <Route exact path="/" element={<Dashboard />} />
-      </Routes>
-    </>
+      <ThemeProvider>
+        <Routes>
+            <Route path="/admin/login" element={<Login />} />
+            <Route path="/" element={<Dashboard />} />
+        </Routes>
+      </ThemeProvider>
   );
 }
-
-export default App;
