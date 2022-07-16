@@ -14,9 +14,8 @@ type LoginJSON struct {
 
 func AdminLoginHandler(ctx *gin.Context) {
 	request := LoginJSON{}
-
-	ctx.Bind(&request) 
-
+	ctx.Bind(&request)
+	
 	adminUserModel := services.FetchAdminUserByEmail(ctx, request.Email)
 
 	match := CheckPasswordHash(request.Password, adminUserModel.Password)

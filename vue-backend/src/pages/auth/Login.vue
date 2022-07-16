@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 import { ref } from "vue"
 import { useI18n } from 'vue-i18n'
 
@@ -13,6 +14,7 @@ interface User {
     password?: string;
 }
 
+const router = useRouter()
 const user = ref<User>({});
 
 const loginFormSubmit = () => {
@@ -21,9 +23,9 @@ const loginFormSubmit = () => {
     axios({
         method: 'POST',
         url: endpointBaseUrl + "/admin/login",
-        data: {email: user.value.email, password: user.value.password}
+        data: user.value,
     }).then(response => {
-            console.log(response)
+            router.push({ name: 'dashboard' })
         })
         .catch(error => {
             console.error("There was an error!", error);
@@ -35,7 +37,7 @@ const loginFormSubmit = () => {
     <div class="h-screen min-h-full flex items-center justify-center py-12  px-4 sm:px-6 lg:px-8">
         <div class="max-w-md w-full shadow p-8">
             <div>
-                <img  class="mx-auto h-12 w-auto" src="../assets/logo.svg" alt="AvoRed E commerce" />
+                <img  class="mx-auto h-12 w-auto" src="@/assets/logo.svg" alt="AvoRed E commerce" />
                 <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
                     {{ t('sign_into_avored_account') }}
                 </h2>
