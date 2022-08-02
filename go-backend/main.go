@@ -36,17 +36,11 @@ func main() {
 
 	// loginController := providers.LoginController
 	server.POST("/admin/login", controllers.AdminLoginHandler)
+
+	//############### ADMIN USER ROUTES ###############
 	server.GET("/admin/user/:id", controllers.GetAdminUserDetails)
-	// server.POST("/login", func(ctx *gin.Context) {
-	// 	token := providers.LoginController.Login(ctx)
-	// 	if token != "" {
-	// 		ctx.JSON(http.StatusOK, gin.H{
-	// 			"token": token,
-	// 		})
-	// 	} else {
-	// 		ctx.JSON(http.StatusUnauthorized, nil)
-	// 	}
-	// })
+	server.PUT("/admin/user/:id", controllers.UpdateAdminUserDetails)
+	
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"

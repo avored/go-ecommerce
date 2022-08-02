@@ -45,6 +45,20 @@ func (r *AdminUserOps) AdminUserGetByEmail(email string) (*ent.AdminUser, error)
 	return adminUser, nil
 }
 
+func (r *AdminUserOps) UpdateAdminUserById(id int, updateAdminUser ent.AdminUser) (*ent.AdminUser, error) {
+
+	adminUserModel, err := r.client.AdminUser.
+						UpdateOneID(id).
+						SetFirstName(updateAdminUser.FirstName).
+						SetLastName(updateAdminUser.LastName).
+						Save(r.ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return adminUserModel, nil
+}
+
 
 func (r *AdminUserOps) AdminUserDelete(id int) (int, error) {
 
