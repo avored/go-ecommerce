@@ -17,5 +17,14 @@ func FetchAdminUserByEmail (ctx context.Context, email string) *ent.AdminUser {
 	}
 
 	return adminUserModel
+}
 
+func FetchAdminUserByID (ctx context.Context, id int) *ent.AdminUser {
+	adminUserModel, err := repository.NewAdminUserOps(ctx).AdminUserGetByID(id)
+	if err != nil {
+		log.Printf("err : %s", err)
+		return nil
+	}
+
+	return adminUserModel
 }

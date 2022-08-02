@@ -11,6 +11,7 @@ import ThemeProvider from './context/themeContext'
 // Import pages
 import Dashboard from './pages/Dashboard'
 import Login from './pages/auth/Login'
+import MyAccountEdit from './pages/my-account/MyAccountEdit'
 
 export default function App() {
 
@@ -26,6 +27,7 @@ export default function App() {
       <ThemeProvider>
         <Routes>
             <Route path="/admin/login" element={<Login />} />
+            <Route path="/admin/my-account/edit" element={<MyAccountEdit />} />
             <Route path="/" element={<Dashboard />} />
         </Routes>
       </ThemeProvider>

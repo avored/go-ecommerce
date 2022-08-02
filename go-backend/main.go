@@ -36,6 +36,7 @@ func main() {
 
 	// loginController := providers.LoginController
 	server.POST("/admin/login", controllers.AdminLoginHandler)
+	server.GET("/admin/user/:id", controllers.GetAdminUserDetails)
 	// server.POST("/login", func(ctx *gin.Context) {
 	// 	token := providers.LoginController.Login(ctx)
 	// 	if token != "" {
