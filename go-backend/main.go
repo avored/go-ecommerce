@@ -39,7 +39,9 @@ func main() {
 
 	//############### ADMIN USER ROUTES ###############
 	server.GET("/admin/user/:id", controllers.GetAdminUserDetails)
-	server.PUT("/admin/user/:id", controllers.UpdateAdminUserDetails)
+	server.POST("/admin/user", controllers.CreateAdminUser)
+	server.PUT("/admin/user/:id", controllers.UpdateAdminUser)
+	server.DELETE("/admin/user/:id", controllers.DeleteAdminUser)
 	
 	port := os.Getenv("PORT")
 	if port == "" {

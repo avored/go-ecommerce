@@ -7,15 +7,14 @@ import (
 )
 
 type LoginJSON struct {
-    Email     string `form:"email" binding:"required"`
-    Password string `form:"password" binding:"required"`
+	Email    string `form:"email" binding:"required"`
+	Password string `form:"password" binding:"required"`
 }
-
 
 func AdminLoginHandler(ctx *gin.Context) {
 	request := LoginJSON{}
 	ctx.Bind(&request)
-	
+
 	adminUserModel := services.FetchAdminUserByEmail(ctx, request.Email)
 
 	match := CheckPasswordHash(request.Password, adminUserModel.Password)
@@ -30,11 +29,6 @@ func AdminLoginHandler(ctx *gin.Context) {
 			"token":      token,
 		},
 	)
-}
-
-func HashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
 }
 
 func CheckPasswordHash(password, hash string) bool {
