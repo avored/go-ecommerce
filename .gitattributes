@@ -1,1 +1,2 @@
-react-backend/* linguist-vendored
+*.jsx linguist-detectable=false
+*.js linguist-detectable=false
