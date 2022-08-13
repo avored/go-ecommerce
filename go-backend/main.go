@@ -43,6 +43,14 @@ func main() {
 	server.PUT("/admin/user/:id", controllers.UpdateAdminUser)
 	server.DELETE("/admin/user/:id", controllers.DeleteAdminUser)
 	
+	//############### CATEGORY ROUTES ###############
+	server.GET("/admin/category/:id", controllers.GetCategoryDetails)
+	server.POST("/admin/category", controllers.CreateCategory)
+	server.PUT("/admin/category/:id", controllers.UpdateCategory)
+	server.DELETE("/admin/category/:id", controllers.DeleteCategory)
+
+
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
