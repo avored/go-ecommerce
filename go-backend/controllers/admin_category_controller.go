@@ -101,7 +101,7 @@ func DeleteCategory(ctx *gin.Context) {
 
 	ctx.JSON(200,
 		gin.H{
-			"delete_admin_user_id": deleteCategoryId,
+			"delete_category_id": deleteCategoryId,
 		},
 	)
 }

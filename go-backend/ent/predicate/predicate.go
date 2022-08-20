@@ -11,3 +11,6 @@ type AdminUser func(*sql.Selector)
 
 // Category is the predicate function for category builders.
 type Category func(*sql.Selector)
+
+// Role is the predicate function for role builders.
+type Role func(*sql.Selector)

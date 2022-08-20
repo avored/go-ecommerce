@@ -26,6 +26,7 @@ type config struct {
 type hooks struct {
 	AdminUser []ent.Hook
 	Category  []ent.Hook
+	Role      []ent.Hook
 }
 
 // Options applies the options on the config object.

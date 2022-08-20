@@ -48,7 +48,13 @@ func main() {
 	server.POST("/admin/category", controllers.CreateCategory)
 	server.PUT("/admin/category/:id", controllers.UpdateCategory)
 	server.DELETE("/admin/category/:id", controllers.DeleteCategory)
-
+	
+	//############### ROLE ROUTES ###############
+	
+	server.GET("/admin/role/:id", controllers.GetRoleDetails)
+	server.POST("/admin/role", controllers.CreateRole)
+	server.PUT("/admin/role/:id", controllers.UpdateRole)
+	server.DELETE("/admin/role/:id", controllers.DeleteRole)
 
 
 	port := os.Getenv("PORT")
