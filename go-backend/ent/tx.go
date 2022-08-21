@@ -16,6 +16,8 @@ type Tx struct {
 	AdminUser *AdminUserClient
 	// Category is the client for interacting with the Category builders.
 	Category *CategoryClient
+	// Permission is the client for interacting with the Permission builders.
+	Permission *PermissionClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 
@@ -155,6 +157,7 @@ func (tx *Tx) Client() *Client {
 func (tx *Tx) init() {
 	tx.AdminUser = NewAdminUserClient(tx.config)
 	tx.Category = NewCategoryClient(tx.config)
+	tx.Permission = NewPermissionClient(tx.config)
 	tx.Role = NewRoleClient(tx.config)
 }
 

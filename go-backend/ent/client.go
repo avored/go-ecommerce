@@ -11,6 +11,7 @@ import (
 
 	"github.com/avored/go-ecommerce/ent/adminuser"
 	"github.com/avored/go-ecommerce/ent/category"
+	"github.com/avored/go-ecommerce/ent/permission"
 	"github.com/avored/go-ecommerce/ent/role"
 
 	"entgo.io/ent/dialect"
@@ -26,6 +27,8 @@ type Client struct {
 	AdminUser *AdminUserClient
 	// Category is the client for interacting with the Category builders.
 	Category *CategoryClient
+	// Permission is the client for interacting with the Permission builders.
+	Permission *PermissionClient
 	// Role is the client for interacting with the Role builders.
 	Role *RoleClient
 }
@@ -43,6 +46,7 @@ func (c *Client) init() {
 	c.Schema = migrate.NewSchema(c.driver)
 	c.AdminUser = NewAdminUserClient(c.config)
 	c.Category = NewCategoryClient(c.config)
+	c.Permission = NewPermissionClient(c.config)
 	c.Role = NewRoleClient(c.config)
 }
 
@@ -75,11 +79,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:       ctx,
-		config:    cfg,
-		AdminUser: NewAdminUserClient(cfg),
-		Category:  NewCategoryClient(cfg),
-		Role:      NewRoleClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		AdminUser:  NewAdminUserClient(cfg),
+		Category:   NewCategoryClient(cfg),
+		Permission: NewPermissionClient(cfg),
+		Role:       NewRoleClient(cfg),
 	}, nil
 }
 
@@ -97,11 +102,12 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:       ctx,
-		config:    cfg,
-		AdminUser: NewAdminUserClient(cfg),
-		Category:  NewCategoryClient(cfg),
-		Role:      NewRoleClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		AdminUser:  NewAdminUserClient(cfg),
+		Category:   NewCategoryClient(cfg),
+		Permission: NewPermissionClient(cfg),
+		Role:       NewRoleClient(cfg),
 	}, nil
 }
 
@@ -132,6 +138,7 @@ func (c *Client) Close() error {
 func (c *Client) Use(hooks ...Hook) {
 	c.AdminUser.Use(hooks...)
 	c.Category.Use(hooks...)
+	c.Permission.Use(hooks...)
 	c.Role.Use(hooks...)
 }
 
@@ -313,6 +320,96 @@ func (c *CategoryClient) GetX(ctx context.Context, id int) *Category {
 // Hooks returns the client hooks.
 func (c *CategoryClient) Hooks() []Hook {
 	return c.hooks.Category
+}
+
+// PermissionClient is a client for the Permission schema.
+type PermissionClient struct {
+	config
+}
+
+// NewPermissionClient returns a client for the Permission from the given config.
+func NewPermissionClient(c config) *PermissionClient {
+	return &PermissionClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `permission.Hooks(f(g(h())))`.
+func (c *PermissionClient) Use(hooks ...Hook) {
+	c.hooks.Permission = append(c.hooks.Permission, hooks...)
+}
+
+// Create returns a builder for creating a Permission entity.
+func (c *PermissionClient) Create() *PermissionCreate {
+	mutation := newPermissionMutation(c.config, OpCreate)
+	return &PermissionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of Permission entities.
+func (c *PermissionClient) CreateBulk(builders ...*PermissionCreate) *PermissionCreateBulk {
+	return &PermissionCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for Permission.
+func (c *PermissionClient) Update() *PermissionUpdate {
+	mutation := newPermissionMutation(c.config, OpUpdate)
+	return &PermissionUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *PermissionClient) UpdateOne(pe *Permission) *PermissionUpdateOne {
+	mutation := newPermissionMutation(c.config, OpUpdateOne, withPermission(pe))
+	return &PermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *PermissionClient) UpdateOneID(id int) *PermissionUpdateOne {
+	mutation := newPermissionMutation(c.config, OpUpdateOne, withPermissionID(id))
+	return &PermissionUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for Permission.
+func (c *PermissionClient) Delete() *PermissionDelete {
+	mutation := newPermissionMutation(c.config, OpDelete)
+	return &PermissionDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *PermissionClient) DeleteOne(pe *Permission) *PermissionDeleteOne {
+	return c.DeleteOneID(pe.ID)
+}
+
+// DeleteOne returns a builder for deleting the given entity by its id.
+func (c *PermissionClient) DeleteOneID(id int) *PermissionDeleteOne {
+	builder := c.Delete().Where(permission.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &PermissionDeleteOne{builder}
+}
+
+// Query returns a query builder for Permission.
+func (c *PermissionClient) Query() *PermissionQuery {
+	return &PermissionQuery{
+		config: c.config,
+	}
+}
+
+// Get returns a Permission entity by its id.
+func (c *PermissionClient) Get(ctx context.Context, id int) (*Permission, error) {
+	return c.Query().Where(permission.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *PermissionClient) GetX(ctx context.Context, id int) *Permission {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *PermissionClient) Hooks() []Hook {
+	return c.hooks.Permission
 }
 
 // RoleClient is a client for the Role schema.

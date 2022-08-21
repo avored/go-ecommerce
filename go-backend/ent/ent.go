@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/avored/go-ecommerce/ent/adminuser"
 	"github.com/avored/go-ecommerce/ent/category"
+	"github.com/avored/go-ecommerce/ent/permission"
 	"github.com/avored/go-ecommerce/ent/role"
 )
 
@@ -33,9 +34,10 @@ type OrderFunc func(*sql.Selector)
 // columnChecker returns a function indicates if the column exists in the given column.
 func columnChecker(table string) func(string) error {
 	checks := map[string]func(string) bool{
-		adminuser.Table: adminuser.ValidColumn,
-		category.Table:  category.ValidColumn,
-		role.Table:      role.ValidColumn,
+		adminuser.Table:  adminuser.ValidColumn,
+		category.Table:   category.ValidColumn,
+		permission.Table: permission.ValidColumn,
+		role.Table:       role.ValidColumn,
 	}
 	check, ok := checks[table]
 	if !ok {

@@ -50,11 +50,16 @@ func main() {
 	server.DELETE("/admin/category/:id", controllers.DeleteCategory)
 	
 	//############### ROLE ROUTES ###############
-	
 	server.GET("/admin/role/:id", controllers.GetRoleDetails)
 	server.POST("/admin/role", controllers.CreateRole)
 	server.PUT("/admin/role/:id", controllers.UpdateRole)
 	server.DELETE("/admin/role/:id", controllers.DeleteRole)
+	
+	//############### Permission ROUTES ###############
+	server.GET("/admin/permission/:id", controllers.GetPermissionDetails)
+	server.POST("/admin/permission", controllers.CreatePermission)
+	server.PUT("/admin/permission/:id", controllers.UpdatePermission)
+	server.DELETE("/admin/permission/:id", controllers.DeletePermission)
 
 
 	port := os.Getenv("PORT")
