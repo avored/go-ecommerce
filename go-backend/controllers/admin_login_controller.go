@@ -3,6 +3,12 @@ package controllers
 import (
 	"github.com/avored/go-ecommerce/services"
 	"github.com/gin-gonic/gin"
+	// "github.com/go-oauth2/gin-server"
+	// "github.com/go-oauth2/oauth2/v4"
+	// "github.com/go-oauth2/oauth2/v4/manage"
+	// "github.com/go-oauth2/oauth2/v4/models"
+	// "github.com/go-oauth2/oauth2/v4/server"
+	// "github.com/go-oauth2/oauth2/v4/store"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -20,6 +26,19 @@ func AdminLoginHandler(ctx *gin.Context) {
 	match := CheckPasswordHash(request.Password, adminUserModel.Password)
 	var token string = "INVALID_TOKEN"
 	if match {
+		// manager := manage.NewDefaultManager()
+		// manager.SetAuthorizeCodeTokenCfg(manage.DefaultAuthorizeCodeTokenCfg)
+
+		// manager.MustTokenStorage(store.NewMemoryTokenStore())
+
+		// clientStore := store.NewClientStore()
+		// manager.MapClientStorage(clientStore)
+
+		// srv := server.NewDefaultServer(manager)
+		// srv.SetAllowGetAccessRequest(true)
+		// srv.SetClientInfoHandler(server.ClientFormHandler)
+		// manager.SetRefreshTokenCfg(manage.DefaultRefreshTokenCfg)
+
 		token = "my_demo_valid_token_add_middleware_jwt_token_via_gin_framework"
 	}
 

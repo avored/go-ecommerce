@@ -25,10 +25,16 @@ func GetRoleDetails(ctx *gin.Context) {
 	)
 }
 
+type Permission struct {
+	Identifier string `form:"text" binding:"required,max=255"`
+}
 type CreateRoleRequest struct {
-	Name       		string `form:"name" binding:"required"`
-	Identifier      string `form:"identifier" binding:"required"`
-	Description		string `form:"description"`
+	NestedStruct struct {
+	}
+	Name        string        `form:"name" binding:"required"`
+	Identifier  string        `form:"identifier" binding:"required"`
+	Description string        `form:"description"`
+	Permissions []*Permission `form:"permissions" binding:"required"`
 }
 
 func CreateRole(ctx *gin.Context) {
@@ -50,9 +56,9 @@ func CreateRole(ctx *gin.Context) {
 }
 
 type RoleUpdateRequest struct {
-	Name string `form:"name" binding:"required"`
+	Name        string `form:"name" binding:"required"`
 	Identifier  string `form:"identifier" binding:"required"`
-	Description  string `form:"description"`
+	Description string `form:"description"`
 }
 
 func UpdateRole(ctx *gin.Context) {
@@ -79,8 +85,6 @@ func UpdateRole(ctx *gin.Context) {
 		},
 	)
 }
-
-
 
 type DeleteRoleRequest struct {
 	ID int `uri:"id" binding:"required"`
