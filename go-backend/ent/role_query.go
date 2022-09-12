@@ -4,12 +4,14 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/avored/go-ecommerce/ent/permission"
 	"github.com/avored/go-ecommerce/ent/predicate"
 	"github.com/avored/go-ecommerce/ent/role"
 )
@@ -23,6 +25,8 @@ type RoleQuery struct {
 	order      []OrderFunc
 	fields     []string
 	predicates []predicate.Role
+	// eager-loading edges.
+	withPermissions *PermissionQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +61,28 @@ func (rq *RoleQuery) Unique(unique bool) *RoleQuery {
 func (rq *RoleQuery) Order(o ...OrderFunc) *RoleQuery {
 	rq.order = append(rq.order, o...)
 	return rq
+}
+
+// QueryPermissions chains the current query on the "permissions" edge.
+func (rq *RoleQuery) QueryPermissions() *PermissionQuery {
+	query := &PermissionQuery{config: rq.config}
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := rq.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := rq.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, selector),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, role.PermissionsTable, role.PermissionsPrimaryKey...),
+		)
+		fromU = sqlgraph.SetNeighbors(rq.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Role entity from the query.
@@ -235,16 +261,28 @@ func (rq *RoleQuery) Clone() *RoleQuery {
 		return nil
 	}
 	return &RoleQuery{
-		config:     rq.config,
-		limit:      rq.limit,
-		offset:     rq.offset,
-		order:      append([]OrderFunc{}, rq.order...),
-		predicates: append([]predicate.Role{}, rq.predicates...),
+		config:          rq.config,
+		limit:           rq.limit,
+		offset:          rq.offset,
+		order:           append([]OrderFunc{}, rq.order...),
+		predicates:      append([]predicate.Role{}, rq.predicates...),
+		withPermissions: rq.withPermissions.Clone(),
 		// clone intermediate query.
 		sql:    rq.sql.Clone(),
 		path:   rq.path,
 		unique: rq.unique,
 	}
+}
+
+// WithPermissions tells the query-builder to eager-load the nodes that are connected to
+// the "permissions" edge. The optional arguments are used to configure the query builder of the edge.
+func (rq *RoleQuery) WithPermissions(opts ...func(*PermissionQuery)) *RoleQuery {
+	query := &PermissionQuery{config: rq.config}
+	for _, opt := range opts {
+		opt(query)
+	}
+	rq.withPermissions = query
+	return rq
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -313,8 +351,11 @@ func (rq *RoleQuery) prepareQuery(ctx context.Context) error {
 
 func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, error) {
 	var (
-		nodes = []*Role{}
-		_spec = rq.querySpec()
+		nodes       = []*Role{}
+		_spec       = rq.querySpec()
+		loadedTypes = [1]bool{
+			rq.withPermissions != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]interface{}, error) {
 		return (*Role).scanValues(nil, columns)
@@ -322,6 +363,7 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	_spec.Assign = func(columns []string, values []interface{}) error {
 		node := &Role{config: rq.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -333,6 +375,60 @@ func (rq *RoleQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Role, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+
+	if query := rq.withPermissions; query != nil {
+		edgeids := make([]driver.Value, len(nodes))
+		byid := make(map[int]*Role)
+		nids := make(map[int]map[*Role]struct{})
+		for i, node := range nodes {
+			edgeids[i] = node.ID
+			byid[node.ID] = node
+			node.Edges.Permissions = []*Permission{}
+		}
+		query.Where(func(s *sql.Selector) {
+			joinT := sql.Table(role.PermissionsTable)
+			s.Join(joinT).On(s.C(permission.FieldID), joinT.C(role.PermissionsPrimaryKey[1]))
+			s.Where(sql.InValues(joinT.C(role.PermissionsPrimaryKey[0]), edgeids...))
+			columns := s.SelectedColumns()
+			s.Select(joinT.C(role.PermissionsPrimaryKey[0]))
+			s.AppendSelect(columns...)
+			s.SetDistinct(false)
+		})
+		neighbors, err := query.sqlAll(ctx, func(_ context.Context, spec *sqlgraph.QuerySpec) {
+			assign := spec.Assign
+			values := spec.ScanValues
+			spec.ScanValues = func(columns []string) ([]interface{}, error) {
+				values, err := values(columns[1:])
+				if err != nil {
+					return nil, err
+				}
+				return append([]interface{}{new(sql.NullInt64)}, values...), nil
+			}
+			spec.Assign = func(columns []string, values []interface{}) error {
+				outValue := int(values[0].(*sql.NullInt64).Int64)
+				inValue := int(values[1].(*sql.NullInt64).Int64)
+				if nids[inValue] == nil {
+					nids[inValue] = map[*Role]struct{}{byid[outValue]: struct{}{}}
+					return assign(columns[1:], values[1:])
+				}
+				nids[inValue][byid[outValue]] = struct{}{}
+				return nil
+			}
+		})
+		if err != nil {
+			return nil, err
+		}
+		for _, n := range neighbors {
+			nodes, ok := nids[n.ID]
+			if !ok {
+				return nil, fmt.Errorf(`unexpected "permissions" node returned %v`, n.ID)
+			}
+			for kn := range nodes {
+				kn.Edges.Permissions = append(kn.Edges.Permissions, n)
+			}
+		}
+	}
+
 	return nodes, nil
 }
 

@@ -26,6 +26,27 @@ type Permission struct {
 	Identifier string `json:"identifier,omitempty"`
 	// Description holds the value of the "description" field.
 	Description string `json:"description,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the PermissionQuery when eager-loading is set.
+	Edges PermissionEdges `json:"edges"`
+}
+
+// PermissionEdges holds the relations/edges for other nodes in the graph.
+type PermissionEdges struct {
+	// Roles holds the value of the roles edge.
+	Roles []*Role `json:"roles,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// RolesOrErr returns the Roles value or an error if the edge
+// was not loaded in eager-loading.
+func (e PermissionEdges) RolesOrErr() ([]*Role, error) {
+	if e.loadedTypes[0] {
+		return e.Roles, nil
+	}
+	return nil, &NotLoadedError{edge: "roles"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -93,6 +114,11 @@ func (pe *Permission) assignValues(columns []string, values []interface{}) error
 		}
 	}
 	return nil
+}
+
+// QueryRoles queries the "roles" edge of the Permission entity.
+func (pe *Permission) QueryRoles() *RoleQuery {
+	return (&PermissionClient{config: pe.config}).QueryRoles(pe)
 }
 
 // Update returns a builder for updating this Permission.

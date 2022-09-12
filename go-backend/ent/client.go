@@ -16,6 +16,7 @@ import (
 
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -407,6 +408,22 @@ func (c *PermissionClient) GetX(ctx context.Context, id int) *Permission {
 	return obj
 }
 
+// QueryRoles queries the roles edge of a Permission.
+func (c *PermissionClient) QueryRoles(pe *Permission) *RoleQuery {
+	query := &RoleQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := pe.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(permission.Table, permission.FieldID, id),
+			sqlgraph.To(role.Table, role.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, true, permission.RolesTable, permission.RolesPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(pe.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
+}
+
 // Hooks returns the client hooks.
 func (c *PermissionClient) Hooks() []Hook {
 	return c.hooks.Permission
@@ -495,6 +512,22 @@ func (c *RoleClient) GetX(ctx context.Context, id int) *Role {
 		panic(err)
 	}
 	return obj
+}
+
+// QueryPermissions queries the permissions edge of a Role.
+func (c *RoleClient) QueryPermissions(r *Role) *PermissionQuery {
+	query := &PermissionQuery{config: c.config}
+	query.path = func(ctx context.Context) (fromV *sql.Selector, _ error) {
+		id := r.ID
+		step := sqlgraph.NewStep(
+			sqlgraph.From(role.Table, role.FieldID, id),
+			sqlgraph.To(permission.Table, permission.FieldID),
+			sqlgraph.Edge(sqlgraph.M2M, false, role.PermissionsTable, role.PermissionsPrimaryKey...),
+		)
+		fromV = sqlgraph.Neighbors(r.driver.Dialect(), step)
+		return fromV, nil
+	}
+	return query
 }
 
 // Hooks returns the client hooks.

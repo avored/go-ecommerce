@@ -24,6 +24,8 @@ func (r *RoleOps) RoleGetByID(id int) (*ent.Role, error) {
 
 	roleModel, err := r.client.Role.Query().
 		Where(role.IDEQ(id)).
+		QueryPermissions().
+		QueryRoles().
 		Only(r.ctx)
 
 	if err != nil {
@@ -52,6 +54,7 @@ func (r *RoleOps) CreateRole(createRole ent.Role) (*ent.Role, error) {
 						SetName(createRole.Name).
 						SetIdentifier(createRole.Identifier).
 						SetDescription(createRole.Description).
+						AddPermissions(createRole.Edges.Permissions...).
 						Save(r.ctx)
 	if err != nil {
 		return nil, err

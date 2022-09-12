@@ -37,7 +37,7 @@ func FetchRoleByID (ctx context.Context, id int) *ent.Role {
 		return nil
 	}
 
-	return fetchRoleModel
+return fetchRoleModel
 }
 func UpdateRoleByID (ctx context.Context, id int, role ent.Role) *ent.Role {
 	updatedRoleModel, err := repository.NewRoleOps(ctx).UpdateRoleById(id, role)

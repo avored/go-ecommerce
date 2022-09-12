@@ -13,6 +13,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/avored/go-ecommerce/ent/permission"
 	"github.com/avored/go-ecommerce/ent/predicate"
+	"github.com/avored/go-ecommerce/ent/role"
 )
 
 // PermissionUpdate is the builder for updating Permission entities.
@@ -52,9 +53,45 @@ func (pu *PermissionUpdate) SetDescription(s string) *PermissionUpdate {
 	return pu
 }
 
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (pu *PermissionUpdate) AddRoleIDs(ids ...int) *PermissionUpdate {
+	pu.mutation.AddRoleIDs(ids...)
+	return pu
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (pu *PermissionUpdate) AddRoles(r ...*Role) *PermissionUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pu.AddRoleIDs(ids...)
+}
+
 // Mutation returns the PermissionMutation object of the builder.
 func (pu *PermissionUpdate) Mutation() *PermissionMutation {
 	return pu.mutation
+}
+
+// ClearRoles clears all "roles" edges to the Role entity.
+func (pu *PermissionUpdate) ClearRoles() *PermissionUpdate {
+	pu.mutation.ClearRoles()
+	return pu
+}
+
+// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
+func (pu *PermissionUpdate) RemoveRoleIDs(ids ...int) *PermissionUpdate {
+	pu.mutation.RemoveRoleIDs(ids...)
+	return pu
+}
+
+// RemoveRoles removes "roles" edges to Role entities.
+func (pu *PermissionUpdate) RemoveRoles(r ...*Role) *PermissionUpdate {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return pu.RemoveRoleIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -166,6 +203,60 @@ func (pu *PermissionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Column: permission.FieldDescription,
 		})
 	}
+	if pu.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.RolesTable,
+			Columns: permission.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.RemovedRolesIDs(); len(nodes) > 0 && !pu.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.RolesTable,
+			Columns: permission.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := pu.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.RolesTable,
+			Columns: permission.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
 	if n, err = sqlgraph.UpdateNodes(ctx, pu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
 			err = &NotFoundError{permission.Label}
@@ -209,9 +300,45 @@ func (puo *PermissionUpdateOne) SetDescription(s string) *PermissionUpdateOne {
 	return puo
 }
 
+// AddRoleIDs adds the "roles" edge to the Role entity by IDs.
+func (puo *PermissionUpdateOne) AddRoleIDs(ids ...int) *PermissionUpdateOne {
+	puo.mutation.AddRoleIDs(ids...)
+	return puo
+}
+
+// AddRoles adds the "roles" edges to the Role entity.
+func (puo *PermissionUpdateOne) AddRoles(r ...*Role) *PermissionUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return puo.AddRoleIDs(ids...)
+}
+
 // Mutation returns the PermissionMutation object of the builder.
 func (puo *PermissionUpdateOne) Mutation() *PermissionMutation {
 	return puo.mutation
+}
+
+// ClearRoles clears all "roles" edges to the Role entity.
+func (puo *PermissionUpdateOne) ClearRoles() *PermissionUpdateOne {
+	puo.mutation.ClearRoles()
+	return puo
+}
+
+// RemoveRoleIDs removes the "roles" edge to Role entities by IDs.
+func (puo *PermissionUpdateOne) RemoveRoleIDs(ids ...int) *PermissionUpdateOne {
+	puo.mutation.RemoveRoleIDs(ids...)
+	return puo
+}
+
+// RemoveRoles removes "roles" edges to Role entities.
+func (puo *PermissionUpdateOne) RemoveRoles(r ...*Role) *PermissionUpdateOne {
+	ids := make([]int, len(r))
+	for i := range r {
+		ids[i] = r[i].ID
+	}
+	return puo.RemoveRoleIDs(ids...)
 }
 
 // Select allows selecting one or more fields (columns) of the returned entity.
@@ -352,6 +479,60 @@ func (puo *PermissionUpdateOne) sqlSave(ctx context.Context) (_node *Permission,
 			Value:  value,
 			Column: permission.FieldDescription,
 		})
+	}
+	if puo.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.RolesTable,
+			Columns: permission.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.RemovedRolesIDs(); len(nodes) > 0 && !puo.mutation.RolesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.RolesTable,
+			Columns: permission.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := puo.mutation.RolesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2M,
+			Inverse: true,
+			Table:   permission.RolesTable,
+			Columns: permission.RolesPrimaryKey,
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: &sqlgraph.FieldSpec{
+					Type:   field.TypeInt,
+					Column: role.FieldID,
+				},
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Permission{config: puo.config}
 	_spec.Assign = _node.assignValues

@@ -2,6 +2,7 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 )
 
@@ -13,7 +14,7 @@ type Permission struct {
 
 // Fields of the Role.
 func (Permission) Fields() []ent.Field {
-	return []ent.Field {
+	return [] ent.Field {
         field.String("name"),
         field.String("identifier"),
         field.Text("description"),
@@ -22,11 +23,13 @@ func (Permission) Fields() []ent.Field {
 
 // Edges of the Permission.
 func (Permission) Edges() []ent.Edge {
-	return nil
+	return [] ent.Edge{
+        edge.From("roles", Role.Type).Ref("permissions"),
+    }
 }
 
 func (Permission) Mixin() []ent.Mixin {
-    return []ent.Mixin{
-        TimeMixin{},
+    return [] ent.Mixin {
+        TimeMixin {},
     }
 }

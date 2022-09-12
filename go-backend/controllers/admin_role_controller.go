@@ -16,11 +16,11 @@ func GetRoleDetails(ctx *gin.Context) {
 		ctx.JSON(400, gin.H{"msg": err})
 		return
 	}
-	adminUserModel := services.FetchRoleByID(ctx, getRoleRequest.ID)
+	roleModel := services.FetchRoleByID(ctx, getRoleRequest.ID)
 
 	ctx.JSON(200,
 		gin.H{
-			"role": adminUserModel,
+			"role": roleModel,
 		},
 	)
 }
@@ -29,6 +29,7 @@ type CreateRoleRequest struct {
 	Name       		string `form:"name" binding:"required"`
 	Identifier      string `form:"identifier" binding:"required"`
 	Description		string `form:"description"`
+	Permissions 	[]int `form:"permissions[]"`
 }
 
 func CreateRole(ctx *gin.Context) {
@@ -39,6 +40,11 @@ func CreateRole(ctx *gin.Context) {
 	entCreateRole.Name = createRoleRequest.Name
 	entCreateRole.Identifier = createRoleRequest.Identifier
 	entCreateRole.Description = createRoleRequest.Description
+
+	for _, permissionId := range createRoleRequest.Permissions {
+		permissionModel := services.FetchPermissionByID(ctx ,permissionId)
+		entCreateRole.Edges.Permissions = append(entCreateRole.Edges.Permissions, permissionModel)
+	}
 
 	adminRoleModel := services.CreateRole(ctx, entCreateRole)
 
