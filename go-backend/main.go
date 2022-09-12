@@ -25,11 +25,12 @@ func main() {
 	defer client.Close()
 	server := gin.New()
 	cors := middlewares.CORSMiddleware()
-
+	oAuth2Middleware := middlewares.GetOauth2Server(server)
 	// config.AllowMethods = []string{"POST", "GET", "PUT", "DELETE"}
 	// config.AllowOrigins = []string{"http://localhost:3000"}
 
 	server.Use(cors)
+	
 	server.SetTrustedProxies(nil)
 
 	providers.SetClient(client)
@@ -37,29 +38,30 @@ func main() {
 	// loginController := providers.LoginController
 	server.POST("/admin/login", controllers.AdminLoginHandler)
 
-	//############### ADMIN USER ROUTES ###############
-	server.GET("/admin/user/:id", controllers.GetAdminUserDetails)
-	server.POST("/admin/user", controllers.CreateAdminUser)
-	server.PUT("/admin/user/:id", controllers.UpdateAdminUser)
-	server.DELETE("/admin/user/:id", controllers.DeleteAdminUser)
-	
-	//############### CATEGORY ROUTES ###############
-	server.GET("/admin/category/:id", controllers.GetCategoryDetails)
-	server.POST("/admin/category", controllers.CreateCategory)
-	server.PUT("/admin/category/:id", controllers.UpdateCategory)
-	server.DELETE("/admin/category/:id", controllers.DeleteCategory)
-	
-	//############### ROLE ROUTES ###############
-	server.GET("/admin/role/:id", controllers.GetRoleDetails)
-	server.POST("/admin/role", controllers.CreateRole)
-	server.PUT("/admin/role/:id", controllers.UpdateRole)
-	server.DELETE("/admin/role/:id", controllers.DeleteRole)
-	
-	//############### Permission ROUTES ###############
-	server.GET("/admin/permission/:id", controllers.GetPermissionDetails)
-	server.POST("/admin/permission", controllers.CreatePermission)
-	server.PUT("/admin/permission/:id", controllers.UpdatePermission)
-	server.DELETE("/admin/permission/:id", controllers.DeletePermission)
+	adminRoutes := server.Group("/admin")
+	{
+		adminRoutes.Use(oAuth2Middleware)
+		//############### ADMIN USER ROUTES ###############
+		adminRoutes.GET("/user/:id", controllers.GetAdminUserDetails)
+		adminRoutes.POST("/user", controllers.CreateAdminUser)
+		adminRoutes.PUT("/user/:id", controllers.UpdateAdminUser)
+		adminRoutes.DELETE("/user/:id", controllers.DeleteAdminUser)
+		
+		adminRoutes.GET("/category/:id", controllers.GetCategoryDetails)
+		adminRoutes.POST("/category", controllers.CreateCategory)
+		adminRoutes.PUT("/category/:id", controllers.UpdateCategory)
+		adminRoutes.DELETE("/category/:id", controllers.DeleteCategory)
+		
+		adminRoutes.GET("/role/:id", controllers.GetRoleDetails)
+		adminRoutes.POST("/role", controllers.CreateRole)
+		adminRoutes.PUT("/role/:id", controllers.UpdateRole)
+		adminRoutes.DELETE("/role/:id", controllers.DeleteRole)
+		
+		adminRoutes.GET("/permission/:id", controllers.GetPermissionDetails)
+		adminRoutes.POST("/permission", controllers.CreatePermission)
+		adminRoutes.PUT("/permission/:id", controllers.UpdatePermission)
+		adminRoutes.DELETE("/permission/:id", controllers.DeletePermission)
+	}
 
 
 	port := os.Getenv("PORT")
